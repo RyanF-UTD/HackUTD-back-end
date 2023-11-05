@@ -1,27 +1,83 @@
 from fastapi import FastAPI
 import torch
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
+# Firebase stuff
+cred = credentials.Certificate('service-account-file.json')
+firebase = firebase_admin.initialize_app(cred)
+db = firestore.client()
 
-class RequestBody(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+users_ref = db.collection("properties")
+docs = users_ref.stream()
 
+for doc in docs:
+    print(f"{doc.id} => {doc.to_dict()}")
 
+# end Firebase stuff
 
 app = FastAPI()
 
+origins = [
+        "http://localhost:9000",
+        "http://localhost:8000",
+        "http://localhost",
+]
 
-@app.get("/")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
+
+class RequestBody(BaseModel):
+    userid: str
+    amount: float
+    propertyid: str
+
+class CredsRequestBody(BaseModel):
+    email: str
+    password: float
+
+class DummyRequestBody(BaseModel):
+    req: str
+
+
+
+@app.post("/")
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/process-transaction")
-async def process_transaction(req: RequestBody):
+@app.post("/buy/")
+async def process_buy(req: RequestBody):
     return req
 
-@app.post("/tbd")
-async def tbd():
-    return {"message": "Hello World"}
+@app.post("/sell/")
+async def process_sell(req: RequestBody):
+    return req
+
+@app.post("/register")
+async def process_register(req: str):
+    return {"message": req}
+
+@app.post("/login")
+async def process_login(req: str):
+    return {"message": req}
+
+@app.post("/value")
+async def process_value(req: DummyRequestBody):
+    print(req)
+    return {"message": req}
+
+@app.post("/login")
+async def login(user: User):
+    # Here you can add your logic to check if the email and password are valid
+    # For example, you can check if the email exists in your database and if the password matches
+    # If the email and password are valid, you can return a success message
+    # If the email or password are invalid, you can return an error message
+    return {"message": "Login successful"}
