@@ -4,11 +4,13 @@ from pydantic import BaseModel
 
 
 class RequestBody(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+    userid: str
+    amount: float
+    propertyid: str
 
+class CredsRequestBody(BaseModel):
+    email: str
+    password: float
 
 
 app = FastAPI()
@@ -18,10 +20,18 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/process-transaction")
+@app.post("/buy")
 async def process_transaction(req: RequestBody):
     return req
 
-@app.post("/tbd")
-async def tbd():
-    return {"message": "Hello World"}
+@app.post("/sell")
+async def process_transaction(req: RequestBody):
+    return req
+
+@app.post("/register")
+async def process_transaction(req: str):
+    return {"message": req}
+
+@app.post("/value")
+async def process_transaction(req: str):
+    return {"message": req}
