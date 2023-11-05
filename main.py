@@ -1,7 +1,22 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
+# Firebase stuff
+cred = credentials.Certificate('service-account-file.json')
+firebase = firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+users_ref = db.collection("properties")
+docs = users_ref.stream()
+
+for doc in docs:
+    print(f"{doc.id} => {doc.to_dict()}")
+
+# end Firebase stuff
 
 app = FastAPI()
 
@@ -47,6 +62,10 @@ async def process_sell(req: RequestBody):
 
 @app.post("/register")
 async def process_register(req: str):
+    return {"message": req}
+
+@app.post("/login")
+async def process_login(req: str):
     return {"message": req}
 
 @app.post("/value")
