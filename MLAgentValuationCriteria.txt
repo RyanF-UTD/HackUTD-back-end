@@ -1,0 +1,14 @@
+Is the floor made of valuable material?
+Is the floor made of wood, tile, or marble?
+
+
+//what are a components of a room?
+//floor
+//walls
+//ceiling
+//windows
+//doors
+//general environment
+
+//is the building made of expensive matrials?"
+//
