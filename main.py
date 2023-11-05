@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import torch
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import firebase_admin
@@ -72,3 +73,11 @@ async def process_login(req: str):
 async def process_value(req: DummyRequestBody):
     print(req)
     return {"message": req}
+
+@app.post("/login")
+async def login(user: User):
+    # Here you can add your logic to check if the email and password are valid
+    # For example, you can check if the email exists in your database and if the password matches
+    # If the email and password are valid, you can return a success message
+    # If the email or password are invalid, you can return an error message
+    return {"message": "Login successful"}
